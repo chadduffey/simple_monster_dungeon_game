@@ -51,30 +51,65 @@ def get_moves(player):
 		moves.remove("DOWN")
 	return moves
 
-monster, door, player = get_locations()
+def draw_map(player):
+	print(" _"*5)
+	title = "|{}"
 
-while True:
-	
-	valid_moves = get_moves(player)
-	clear_screen()
+	for cell in CELLS:
+		x, y = cell
+		if x < 4:
+			line_end = ""
+			if cell == player:
+				output = title.format("X")
+			else:
+				output = title.format("_")
+		else:
+			line_end = "\n"
+			if cell == player:
+				output = title.format("X|")
+			else:
+				output = title.format("_|")
+		print(output, end=line_end)
 
-	print("Welcome to the dungeon!")
-	print("You are currently in room {}".format(player))
-	print("You can move {}".format(", ".join(valid_moves)))
-	print("Enter QUIT to quit")
 
-	move = input("> ")
-	move = move.upper()
-	if move == 'QUIT':
-		break
-	if move in valid_moves:
-		player = move_player(player, move)
+def game_loop():
+	monster, door, player = get_locations()
+	playing = True
+
+	while playing:
+		clear_screen()
+		draw_map(player)
+		valid_moves = get_moves(player)
+
+		print("You are currently in room {}".format(player))
+		print("You can move {}".format(", ".join(valid_moves)))
+		print("Enter QUIT to quit")
+
+		move = input("> ")
+		move = move.upper()
+		
+		if move == 'QUIT':
+			print("\n** See you later! **\n")
+			break
+		if move in valid_moves:
+			player = move_player(player, move)
+
+			if player == monster:
+				print("\n** Oh no! the monster got you! Better luck next time! **")
+				playing = False
+
+			if player == door:
+				print("\n** You escaped! Congrats! **\n")
+				playing = False
+
+		else:
+			input("\n** Walls are hard! Dont run into them! **\n")
 	else:
-		print("\n** Walls are hard! Dont run into them! **\n")
-		continue
+		if input("Play again? [Y/n]").lower() != "n":
+			game_loop()
 
-	#good move, change player position
-	#bad move dont change
-	#on the monster, they lose
-	#on door, they win
-	#otherwise loop
+
+print("Welcome to the dungeon!")
+input("Press return to start!")
+clear_screen()
+game_loop()
