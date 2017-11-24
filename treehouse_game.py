@@ -23,3 +23,19 @@ def get_locations():
 
 	return monster, door, player
 
+while True:
+	print("Welcome to the dungeon!")
+	print("You are currently in room {}") #fill with player position
+	print("You can move {}") #fill with available moves
+	print("Enter QUIT to quit")
+
+	move = input("> ")
+	if move == 'QUIT':
+		break
+
+	#good move, change player position
+	#bad move dont change
+	#on the monster, they lose
+	#on door, they win
+	#otherwise loop
+	
